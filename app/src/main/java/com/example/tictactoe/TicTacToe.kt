@@ -111,8 +111,8 @@ class TicTacToe{
         if(isGameOver())
         {
             enableButtons(false)
-            test(result().toString())
-            test("DONE")
+            //test(result().toString())
+            //test("DONE")
         }
     }
 }

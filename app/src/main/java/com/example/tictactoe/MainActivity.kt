@@ -9,10 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tictactoe.databinding.ActivityMainBinding
 
+lateinit var buttons: Array<Array<Button>>
 
 open class MainActivity : AppCompatActivity()
 {
-    lateinit var buttons: Array<Array<Button>>
     private lateinit var binding: ActivityMainBinding
     //var turn : Int = 1
     val SIDE: Int = 3
@@ -40,6 +40,7 @@ open class MainActivity : AppCompatActivity()
         val width: Int = metrics.widthPixels
         //  val w: Int = size.x / TicTacToe.SIDE
         val w: Int = width / TicTacToe.SIDE
+        var tttGame = TicTacToe()
 
         // Create the layout manager as a GridLayout
         val gridLayout = GridLayout(this)
@@ -65,7 +66,7 @@ open class MainActivity : AppCompatActivity()
                 //      for (row in 0 until TicTacToe.SIDE) {
                 //        for (col in 0 until TicTacToe.SIDE) {
                 buttons[row][col].setOnClickListener { view: View ->
-                    tttGame?.update(row, col)
+                    tttGame.update(row, col)
                 }
             }
         }
