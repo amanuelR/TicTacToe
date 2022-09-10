@@ -43,14 +43,22 @@ open class TicTacToe {
         return result
     }
 
-    val isGameOver: Boolean
-        get() = canNotPlay() || whoWon() > 0
-
+    fun isGameOver():Boolean
+    {  //return true
+        return canNotPlay() || (whoWon() > 0)
+    }
     fun resetGame() {
         for (row in 0 until SIDE) for (col in 0 until SIDE) game[row][col] = 0
         turn = 1
     }
-
+    fun result(): String {
+        if (whoWon() > 0)
+            return "Player " + whoWon() + " won"
+        else if (canNotPlay())
+            return "Tie Game"
+        else
+            return "PLAY !!"
+    }
     companion object {
         const val SIDE = 3
     }
