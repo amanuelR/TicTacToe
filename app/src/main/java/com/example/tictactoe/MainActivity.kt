@@ -14,17 +14,16 @@ open class MainActivity : AppCompatActivity()
 {
     lateinit var buttons: Array<Array<Button>>
     private lateinit var binding: ActivityMainBinding
+    //var turn : Int = 1
+    val SIDE: Int = 3
+
+    // private var tttGame: TicTacToe? = null
     private lateinit var tttGame: TicTacToe
-    //private lateinit var game: Array<IntArray>
-    //var turn : Int =1
-    //val SIDE: Int = 3
-
-    //   private var tttGame: TicTacToe? = null
-
+    private lateinit var game: Array<IntArray>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //    setContentView(R.layout.activity_main)
-        //game = Array(TicTacToe.SIDE) { IntArray(TicTacToe.SIDE) }
+        // setContentView(R.layout.activity_main)
+        game = Array(TicTacToe.SIDE) { IntArray(TicTacToe.SIDE) }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         buildGuiByCode()
@@ -52,7 +51,6 @@ open class MainActivity : AppCompatActivity()
         var col: Int
         buttons = Array(TicTacToe.SIDE) { row ->
             Array(TicTacToe.SIDE) { col ->
-                //   Button(row, col)
                 Button(this)
             }
         }
@@ -67,7 +65,7 @@ open class MainActivity : AppCompatActivity()
                 //      for (row in 0 until TicTacToe.SIDE) {
                 //        for (col in 0 until TicTacToe.SIDE) {
                 buttons[row][col].setOnClickListener { view: View ->
-                    tttGame.update(row, col)
+                    tttGame?.update(row, col)
                 }
             }
         }

@@ -1,7 +1,7 @@
 package com.example.tictactoe
 
 
-class TicTacToe : MainActivity(){
+class TicTacToe{
     var turn = 0
     var game: Array<IntArray>
     companion object {
@@ -100,8 +100,10 @@ class TicTacToe : MainActivity(){
         }
     }
 
-    fun update(row: Int, col:Int) { var turn= play(row,col)
+    fun update(row: Int, col:Int) {
+        var turn= play(row,col)
         var play=turn
+
         if(play == 1)
             buttons[row][col].text = "O"
         else if (play==2)
