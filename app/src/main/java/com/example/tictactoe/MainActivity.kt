@@ -29,18 +29,12 @@ open class MainActivity : AppCompatActivity()
         buildGuiByCode()
     }
 
-    fun test(str: String): Unit {
-        val toast = Toast.makeText(applicationContext, str,
-            Toast.LENGTH_SHORT)
-        toast.show()
-    }
-
     fun buildGuiByCode() {
         val metrics = resources.displayMetrics
         val width: Int = metrics.widthPixels
         //  val w: Int = size.x / TicTacToe.SIDE
         val w: Int = width / TicTacToe.SIDE
-        var tttGame = TicTacToe()
+        tttGame = TicTacToe(applicationContext)
 
         // Create the layout manager as a GridLayout
         val gridLayout = GridLayout(this)

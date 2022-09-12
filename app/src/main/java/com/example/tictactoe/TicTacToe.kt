@@ -1,9 +1,13 @@
 package com.example.tictactoe
 
+import android.content.Context
+import android.widget.Toast
 
-class TicTacToe{
+
+class TicTacToe(context: Context){
     var turn = 0
     var game: Array<IntArray>
+    val applicationContext = context
     companion object {
         const val SIDE = 3
     }
@@ -111,8 +115,14 @@ class TicTacToe{
         if(isGameOver())
         {
             enableButtons(false)
-            //test(result().toString())
-            //test("DONE")
+            test(result().toString())
+            test("DONE")
         }
+    }
+
+    fun test(str: String): Unit {
+        val toast = Toast.makeText(applicationContext, str,
+            Toast.LENGTH_SHORT)
+        toast.show()
     }
 }
