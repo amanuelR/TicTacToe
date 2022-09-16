@@ -1,13 +1,15 @@
 package com.example.tictactoe
 
 import android.content.Context
+import android.widget.Button
 import android.widget.Toast
 
 
-class TicTacToe(context: Context){
+class TicTacToe(buttons : Array<Array<Button>>, context: Context){
     var turn = 0
     var game: Array<IntArray>
-    val applicationContext = context
+    var ticTacToeButtons = buttons
+    var ticTacToeContext = context
     companion object {
         const val SIDE = 3
     }
@@ -99,7 +101,7 @@ class TicTacToe(context: Context){
     fun enableButtons( enabled: Boolean ) {
         for (row in 0 until TicTacToe.SIDE) {
             for (col in 0 until TicTacToe.SIDE) {
-                buttons[row][col].setEnabled(enabled);
+                ticTacToeButtons[row][col].setEnabled(enabled);
             }
         }
     }
@@ -109,9 +111,9 @@ class TicTacToe(context: Context){
         var play=turn
 
         if(play == 1)
-            buttons[row][col].text = "O"
+            ticTacToeButtons[row][col].text = "O"
         else if (play==2)
-            buttons[row][col].text = "X"
+            ticTacToeButtons[row][col].text = "X"
         if(isGameOver())
         {
             enableButtons(false)
@@ -121,7 +123,7 @@ class TicTacToe(context: Context){
     }
 
     fun test(str: String): Unit {
-        val toast = Toast.makeText(applicationContext, str,
+        val toast = Toast.makeText(ticTacToeContext, str,
             Toast.LENGTH_SHORT)
         toast.show()
     }
