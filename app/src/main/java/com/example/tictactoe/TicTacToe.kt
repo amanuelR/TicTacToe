@@ -117,8 +117,8 @@ class TicTacToe(buttons : Array<Array<Button>>, context: Context){
         if(isGameOver())
         {
             enableButtons(false)
-            test(result().toString())
-            test("DONE")
+            //test(result().toString())
+            //test("DONE")
         }
     }
 
