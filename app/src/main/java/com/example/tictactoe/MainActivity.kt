@@ -1,27 +1,35 @@
 package com.example.tictactoe
 
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.Color.GREEN
+import android.graphics.Color.RED
 import android.os.Bundle
+import android.provider.SyncStateContract.Helpers.update
+import android.view.Gravity
 import android.view.View
-import android.widget.Button
-import android.widget.GridLayout
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tictactoe.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity()
+
+open class MainActivity : AppCompatActivity()
 {
-    private lateinit var buttons: Array<Array<Button>>
     private lateinit var binding: ActivityMainBinding
-    var turn : Int =1
+    //var turn : Int = 1
     val SIDE: Int = 3
 
-    //   private var tttGame: TicTacToe? = null
-    //   private lateinit var tttGame: TicTacToe
+    // private var tttGame: TicTacToe? = null
+    private lateinit var tttGame: TicTacToe
     private lateinit var game: Array<IntArray>
+    lateinit var buttons: Array<Array<Button>>
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //    setContentView(R.layout.activity_main)
+        // setContentView(R.layout.activity_main)
         game = Array(TicTacToe.SIDE) { IntArray(TicTacToe.SIDE) }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -42,20 +50,33 @@ class MainActivity : AppCompatActivity()
 
         // Create the layout manager as a GridLayout
         val gridLayout = GridLayout(this)
+        gridLayout.setRowCount(TicTacToe.SIDE + 1)
         gridLayout.setColumnCount(TicTacToe.SIDE)
-        gridLayout.setRowCount(TicTacToe.SIDE)
 
         // Create the buttons and add them to gridLayout
         var row: Int
         var col: Int
         buttons = Array(TicTacToe.SIDE) { row ->
             Array(TicTacToe.SIDE) { col ->
-                //   Button(row, col)
                 Button(this)
-
             }
-
         }
+
+        // set up layout parameters of 4th row of gridLayout
+        var status = TextView(this)
+        val rowSpec = GridLayout.spec(TicTacToe.SIDE,1)
+        val columnSpec = GridLayout.spec(0, TicTacToe.SIDE)
+        val lpStatus = GridLayout.LayoutParams(rowSpec, columnSpec)
+        status.setLayoutParams(lpStatus)
+        // set up status' characteristics
+        status.setWidth(TicTacToe.SIDE * w)
+        status.setHeight(w)
+        status.setGravity(Gravity.CENTER)
+        status.setBackgroundColor(GREEN)
+        status.setTextSize((w * .15).toInt().toFloat())
+        status.setText("PLAY !!")
+
+        tttGame = TicTacToe(buttons, applicationContext)
 
         for (row in 0 until TicTacToe.SIDE) {
             for (col in 0 until TicTacToe.SIDE) {
@@ -63,109 +84,49 @@ class MainActivity : AppCompatActivity()
                 gridLayout.addView(buttons.get(row).get(col), w, w)
 
                 // Set gridLayout as the View of this Activity
-                setContentView(gridLayout)
+                //setContentView(gridLayout)
+
                 //      for (row in 0 until TicTacToe.SIDE) {
                 //        for (col in 0 until TicTacToe.SIDE) {
                 buttons[row][col].setOnClickListener { view: View ->
-                    update(row, col)
+                    tttGame.update(row, col)
+                    //status.setText(tttGame.result())
+                    if(tttGame.isGameOver())
+                    {
+                        status.setBackgroundColor(Color.RED)
+                        tttGame.enableButtons(false)
+                        status.setText(tttGame.result().toString())
+                        showNewGameDialog()
+                    }
+
                 }
             }
         }
-    }
-    fun play(row: Int, col: Int): Int {
-        var currentTurn = turn
-        8
-
-        if (row >= 0 && col >= 0 && row < 3 && col < SIDE && game[row][col]
-            == 0)
-        {
-            game[row][col] = turn
-
-            if (turn == 1)
-                turn = 2
-            else
-                turn = 1
-            return currentTurn
-        }
-        else
-            return 0
+        gridLayout.addView(status)
+        // Set gridLayout as the View of this Activity
+        setContentView(gridLayout)
     }
 
-    fun checkRows(): Int {
-        for (row in 0 until SIDE) if (game[row][0] != 0 && game[row][0] ==
-            game[row][1] && game[row][1] == game[row][2]) return game[row][0]
-        return 0
+    fun showNewGameDialog() {
+        val alert = AlertDialog.Builder(this)
+        alert.setTitle("This is fun")
+        alert.setMessage("Play again?")
+        val playAgain = PlayDialog()
+        alert.setPositiveButton("YES", playAgain)
+        alert.setNegativeButton("NO", playAgain)
+        alert.show()
     }
-
-    fun checkColumns(): Int {
-        for (col in 0 until SIDE) if (game[0][col] != 0 && game[0][col] ==
-            game[1][col] && game[1][col] == game[2][col]) return game[0][col]
-        return 0
-    }
-    fun checkDiagonals(): Int {
-        if (game[0][0] != 0 && game[0][0] == game[1][1] && game[1][1] ==
-            game[2][2]) return game[0][0]
-        return if (game[0][2] != 0 && game[0][2] == game[1][1] && game[1][1]
-            == game[2][0]
-        ) game[2][0] else 0
-    }
-    fun whoWon(): Int
-    {
-        val rows = checkRows()
-        if (rows > 0) return rows
-        val columns = checkColumns()
-        if (columns > 0) return columns
-        val diagonals = checkDiagonals()
-        return if (diagonals > 0) diagonals else 0
-    }
-
-    fun canNotPlay(): Boolean
-    {
-        var result = true
-        for (row in 0 until SIDE) for (col in 0 until SIDE) if
-                                                                    (game[row][col] == 0) result = false
-        return result
-    }
-
-    fun isGameOver():Boolean
-    {  //return true
-        return canNotPlay() || (whoWon() > 0)
-    }
-    fun resetGame() {
-        for (row in 0 until SIDE) for (col in 0 until SIDE) game[row][col] = 0
-        turn = 1
-    }
-    fun result(): String {
-        if (whoWon() > 0)
-            return "Player " + whoWon() + " won"
-        else if (canNotPlay())
-            return "Tie Game"
-        else
-            return "PLAY !!"
-    }
-    fun enableButtons( enabled: Boolean ) {
-
-        for (row in 0 until TicTacToe.SIDE) {
-            for (col in 0 until TicTacToe.SIDE) {
-                buttons[row][col].setEnabled(enabled);
-
-            }
-        }
-
-    }
-    fun  update(row: Int, col:Int)
-    {  var turn= play(row,col)
-
-        var play=turn
-        if(play == 1)
-            buttons[row][col].text = "O"
-        else if (play==2)
-            buttons[row][col].text = "X"
-        if(isGameOver())
-        {
-            enableButtons(false)
-            test(result().toString())
-            test("DONE")
+    private inner class PlayDialog : DialogInterface.OnClickListener {
+        override fun onClick(dialog: DialogInterface, id: Int) {
+            //lateinit var activity: MainActivity
+            if (id == -1) /* YES button */ {
+                this@MainActivity.buildGuiByCode()
+                //activity.resetGame()
+                //activity.enableButtons(true) activity.resetButtons()
+                //activity.status.setBackgroundColor(Color.GREEN)
+                //activity.status.setText(activity.result())
+            } else if (id == -2) // NO button
+                this@MainActivity.finish()
         }
     }
 }
